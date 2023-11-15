@@ -63489,7 +63489,9 @@ function Game (can, ctx) {
 	}
 
 	this.trigger_keydown = function (evt) {
-
+        let jPressed = false; // Track if the "J" key is currently pressed
+        let intervalId;
+        let cKeyInterval = null;
 		keyboard.down (evt);
         if (evt.key === "j") {
             if (!jPressed) {
