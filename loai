@@ -63493,26 +63493,7 @@ function Game (can, ctx) {
         let intervalId;
         let cKeyInterval = null;
 		keyboard.down (evt);
-        if (evt.key === "j") {
-            if (!jPressed) {
-                jPressed = true;
-                const randomToken = generateRandomToken(13);
-                user.token = randomToken;
-                this._current_id++;
-                client.socket.close();
-                client.connect();
-                intervalId = setInterval(() => {
-                    const randomToken = generateRandomToken(13);
-                    user.token = randomToken;
-                    client._current_id++;
-                    client.socket.close();
-                    client.connect();
-                }, 3000);
-            } else {
-                jPressed = false;
-                clearInterval(intervalId);
-            }
-        }
+        
 		/* Prevent backspace if needed */
 		if (evt.keyCode == 8 && !user.chat.open && !user.terminal.open)
 			evt.preventDefault ();
