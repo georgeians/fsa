@@ -263,12 +263,10 @@ class cleverUtils_ {
 		this.inventoryHas = id => {
 			return user.inv.can_select.find(e => e.id === id) != null;
 		}
-this.random = () => {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+
 		this.rejoin = () => {
 			user.alive = false;
-user.token_id = cleverUtils.random
+user.token_id = Math.floor(Math.random() * (1 - 100 + 1)) + 1;
 			client.new_alert("Respawn");
 		
 			if (client._current_id != client.socket._current_id) return;
