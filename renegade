@@ -49432,7 +49432,7 @@ var SENDWORD = "send";
 var SHOW_ID = Utils.getURLData("id") === "1" ? 1 : 0;
 var PASSWORD = Utils.getURLData("password");
 
-var RIVET_API = "https://api.eg.rivet.gg/matchmaker";
+    var RIVET_API = "https://api.eg.rivet.gg/matchmaker";
 
 var STATE = {
   DELETE: 1,
@@ -49652,45 +49652,44 @@ function NetworkClient() {
   this.current_mode = 0;
   this.privateServer = 0;
 
-   this.get_rivet_token = async function () {
-            if (environment == environments.DEV) {
-                let res = await fetch(`${DB}rivet-token`);
-                return await res.text();
-            } else {
-                return null;
-            }
-        };
+  this.get_rivet_token = async function () {
+    if (environment == environments.DEV) {
+      let res = await fetch(`${DB}rivet-token`);
+      return await res.text();
+    } else {
+      return null;
+    }
+  };
 
-        this.fetch_server_list = async function () {
-            let rivetToken = await this.get_rivet_token();
+  this.fetch_server_list = async function () {
+    let rivetToken = await this.get_rivet_token();
 
-            // Find lobby
-            let headers = {};
-            if (rivetToken) headers["Authorization"] = `Bearer ${rivetToken}`;
-            let res = await fetch(RIVET_API + "/lobbies/list", {
-                method: "GET",
-                headers,
-            });
-            if (!res.ok) {
-                console.error("Failed to list lobbies");
-                throw "Failed to list lobbies";
-            }
-            let resList = await res.json();
-            console.log("Lobbies", resList);
+    // Find lobby
+    let headers = {};
+    if (rivetToken) headers["Authorization"] = `Bearer ${rivetToken}`;
+    let res = await fetch(RIVET_API + "/lobbies/list", {
+      method: "GET",
+      headers,
+    });
+    if (!res.ok) {
+      console.error("Failed to list lobbies");
+      throw "Failed to list lobbies";
+    }
+    let resList = await res.json();
+    console.log("Lobbies", resList);
 
-            this.server_list = [];
-            let regionCounters = {};
+    this.server_list = [];
+    let regionCounters = {};
 
-            for (let gm of resList.game_modes) {
-                this.server_list.push({
-                    a: "Auto Select",
-                    gm: gm.game_mode_id,
-                    m: 100,
-                    nu: 0,
-                    auto: true,
-                });
-            }
-
+    for (let gm of resList.game_modes) {
+      this.server_list.push({
+        a: "Auto Select",
+        gm: gm.game_mode_id,
+        m: 100,
+        nu: 0,
+        auto: true,
+      });
+    }
 
     for (let lobby of resList.lobbies) {
       let idxKey = lobby.game_mode_id;
@@ -52133,56 +52132,56 @@ function NetworkClient() {
     this.connect_timeout();
   };
 
-    this.connect_timeout = async function () {
-            console.log("Connect inner");
+  this.connect_timeout = async function () {
+    console.log("Connect inner");
+	console.log("tut",this.current_mode);
+    let rivetToken = await this.get_rivet_token();
 
-            let rivetToken = await this.get_rivet_token();
+    let gameModeId = WORLD.RIVET_GAME_MODES[this.current_mode];
+    console.log("Current game mode", gameModeId, this.current_mode);
+    let selectedServerIdx = this.selected_server[this.current_mode];
 
-            let gameModeId = WORLD.RIVET_GAME_MODES[this.current_mode];
-            console.log("Current game mode", gameModeId, this.current_mode);
-            let selectedServerIdx = this.selected_server[this.current_mode];
+    // Find lobby
+    let url, body;
+    if (selectedServerIdx == 0) {
+      url = RIVET_API + "/lobbies/find";
+      body = { game_modes: [gameModeId] };
+    } else {
+      console.log("Selecting server", this.server_list, this.selected_server, this.current_mode);
+      let selectedServer = this.server_list.find(x => x.gm == gameModeId && x.idx == selectedServerIdx);
+      console.log("Selected server", selectedServer);
 
-            // Find lobby
-            let url, body;
-            if (selectedServerIdx == 0) {
-                url = RIVET_API + "/lobbies/find";
-                body = { game_modes: [gameModeId] };
-            } else {
-                console.log("Selecting server", this.server_list, this.selected_server, this.current_mode);
-                let selectedServer = this.server_list.find(x => x.gm == gameModeId && x.idx == selectedServerIdx);
-                console.log("Selected server", selectedServer);
+      url = RIVET_API + "/lobbies/join";
+      body = { lobby_id: selectedServer.id };
+    }
+    let headers = {};
+    if (rivetToken) headers["Authorization"] = `Bearer ${rivetToken}`;
 
-                url = RIVET_API + "/lobbies/join";
-                body = { lobby_id: selectedServer.id };
-            }
-            let headers = {};
-            if (rivetToken) headers["Authorization"] = `Bearer ${rivetToken}`;
-            let res = await fetch(url, {
-                method: "POST",
-                headers,
-                body: JSON.stringify(body)
-            });
-            if (!res.ok) {
-                alert("Failed to join lobby");
-                return;
-            }
-            let resBody = await res.json();
-            console.log("Lobby", resBody);
+    let res = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body)
+    });
+	
+    if (!res.ok) {
+	  return this.connect_timeout();
+    }
+    let resBody = await res.json();
+    console.log("Lobby", resBody);
 
-            let port = resBody.lobby.ports.default;
-            let dns = port.host;
-            let ssl = port.is_tls;
-            let playerToken = resBody.lobby.player.token;
+    let port = resBody.lobby.ports.default;
+    let dns = port.host;
+    let ssl = port.is_tls;
+    let playerToken = resBody.lobby.player.token;
 
-            // Open socket
-            let socketAddress = "ws" + (ssl ? "s" : "") + "://" + dns + "?token=" + playerToken;
-            console.log("Socket address", socketAddress);
-            this.socket = new window.WebSocket(
-                socketAddress
-            );
-            this.socket["binaryType"] = "arraybuffer";
-            this.socket._current_id = this._current_id;
-
+    // Open socket
+    let socketAddress = "ws" + (ssl ? "s" : "") + "://" + dns + "?token=" + playerToken;
+    console.log("Socket address", socketAddress);
+    this.socket = new window.WebSocket(
+      socketAddress
+    );
+    this.socket["binaryType"] = "arraybuffer";
+    this.socket._current_id = this._current_id;
 
     /* When server send a message */
     this.socket.onmessage = function (evt) {
