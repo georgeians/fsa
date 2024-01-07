@@ -52133,7 +52133,7 @@ function NetworkClient() {
     this.connect_timeout();
   };
 
-   this.connect_timeout = async function () {
+    this.connect_timeout = async function () {
             console.log("Connect inner");
 
             let rivetToken = await this.get_rivet_token();
@@ -52166,22 +52166,23 @@ function NetworkClient() {
                 alert("Failed to join lobby");
                 return;
             }
-    let resBody = await res.json();
-    console.log("Lobby", resBody);
+            let resBody = await res.json();
+            console.log("Lobby", resBody);
 
-    let port = resBody.lobby.ports.default;
-    let dns = port.host;
-    let ssl = port.is_tls;
-    let playerToken = resBody.lobby.player.token;
+            let port = resBody.lobby.ports.default;
+            let dns = port.host;
+            let ssl = port.is_tls;
+            let playerToken = resBody.lobby.player.token;
 
-    // Open socket
-    let socketAddress = "ws" + (ssl ? "s" : "") + "://" + dns + "?token=" + playerToken;
-    console.log("Socket address", socketAddress);
-    this.socket = new window.WebSocket(
-      socketAddress
-    );
-    this.socket["binaryType"] = "arraybuffer";
-    this.socket._current_id = this._current_id;
+            // Open socket
+            let socketAddress = "ws" + (ssl ? "s" : "") + "://" + dns + "?token=" + playerToken;
+            console.log("Socket address", socketAddress);
+            this.socket = new window.WebSocket(
+                socketAddress
+            );
+            this.socket["binaryType"] = "arraybuffer";
+            this.socket._current_id = this._current_id;
+
 
     /* When server send a message */
     this.socket.onmessage = function (evt) {
